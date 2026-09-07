@@ -1,0 +1,40 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "A project management application like basecamp, trello, jira monday.com etc",
+  "keywords": [
+    "Api",
+    "endpoint",
+    "project",
+    "management",
+    "jira",
+    "basecamp",
+    "personal",
+    "project",
+    "management",
+    "application"
+  ],
+  "license": "ISC",
+  "author": "Vinit pandey",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "prettier": "3.9.6"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mailgen": "^2.0.36",
+    "mongoose": "^9.9.1",
+    "nodemailer": "^9.0.5"
+  }
+}
