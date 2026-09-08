@@ -1,36 +1,21 @@
-import MailGen from "mailgen";
+import mailgen from "mailgen";
 import nodemailer from "nodemailer";
 
-/**
- * For sending email we used Mailgen 
- * mailgen:- A Node.js package that generates clean, responsive HTML e-mails for sending transactional mail.
-
-so mailgen gives us email templates for creating and customising email.
-
-and for sending email we used nodemailer and mailtrap
-nodemailer is email sending library while mailtrap email service provider.
-
-nodemailer uses resources which is given by mailtrap
-resources are:- hosturl, port, username, password etc.
- */
-
-const sendEmail = async (options) => {
-  const mailGenerator = new MailGen({
+const sendMail = async (options) => {
+  const mailGenerator = new mailgen({
     theme: "default",
     product: {
       name: "Task Manager",
-      link: "https://taskmanagelink.com",
+      link: "https://taskmanager.com/",
     },
   });
 
-  const emailPlainText = mailGenerator.generatePlaintext(
-    options.mailgenContent,
-  );
-  const emailHTML = mailGenerator.generate(options.mailgenContent);
+  const mailText = mailGenerator.generatePlaintext(options.mailgenContent);
+  const mailHtml = mailGenerator.generate(options.mailgenContent);
 
-  const transport = nodemailer.createTransport({
+  let transport = nodemailer.createTransport({
     host: process.env.MAILTRAP_SMPT_HOST,
-    port: process.envMAILTRAP_SMPT_PORT,
+    port: process.env.MAILTRAP_SMPT_PORT,
     auth: {
       user: process.env.MAILTRAP_SMPT_USERNAME,
       pass: process.env.MAILTRAP_SMPT_PASSWORD,
@@ -38,60 +23,59 @@ const sendEmail = async (options) => {
   });
 
   const mail = {
-    from: "mail.taskmanager@example.com",
+    from: "test.manager@test.com",
     to: options.email,
     subject: options.subject,
-    text: emailPlainText,
-    html: emailHTML,
+    text: mailText,
+    html: mailHtml,
   };
 
   try {
-    await transport.sendMail({});
+    await transport.sendMail(mail);
   } catch (err) {
-    console.error("Something went wrong in email service");
-    console.error("Error ", err);
+    console.error(
+      "Something went wrong the mail is not sending, maybe in env file some data is wrong",
+    );
+    console.error("Error:- ", err);
   }
 };
 
-const emailVerificationMailGenContent = (username, verificationUrl) => {
+const emailVerificationContent = (username, emailVerificationURL) => {
   return {
     body: {
       name: username,
-      intro: `Welcome to our App, We'are excited to have you on board. please verify your Email`,
-      action: {
-        instructions: "Please verify your Email by clicking below button.",
+      intro:
+        "Welcome to Task Manager,  We\'re very excited to have you on board.",
+      actions: {
+        instructions: "Click following button for verification of your email",
         button: {
-          color: "#22BC66", // Optional action button color
-          text: "Verify your Email",
-          link: verificationUrl,
+          color: "#26C471",
+          text: "Verify your email",
+          link: emailVerificationURL,
         },
       },
-      outro:
-        "Need help, or have questions? Just reply to this email, we'd love to help.",
-    },
-  };
-};
-const forgetPasswordMailGenContent = (username, passwordResetUrl) => {
-  return {
-    body: {
-      name: username,
-      intro: `We got request to reset your password of your account`,
-      action: {
-        instructions: "Reset your password, Click on the below button.",
-        button: {
-          color: "#bc2222", // Optional action button color
-          text: "Reset Password",
-          link: passwordResetUrl,
-        },
-      },
-      outro:
-        "Need help, or have questions? Just reply to this email, we'd love to help.",
+      outro: "Need any help, reply in this email.",
     },
   };
 };
 
-export {
-  forgetPasswordMailGenContent,
-  emailVerificationMailGenContent,
-  sendEmail,
+const passwordResetContent = (username, passwordResetURL) => {
+  return {
+    body: {
+      name: username,
+      intro:
+        "You have got this email because we have recieved a password reset request from your account",
+      actions: {
+        instructions: "Click following button for reset your password",
+        button: {
+          color: "#EE3266",
+          text: "Reset your password",
+          link: passwordResetURL,
+        },
+      },
+      outro: "Need any help, reply in this email.",
+    },
+  };
 };
+
+export { passwordResetContent, emailVerificationContent, sendMail };
