@@ -35,7 +35,6 @@ const userSchema = new Schema(
     },
     fullname: {
       type: String,
-      required: true,
     },
     isEmailVerified: {
       type: Boolean,
@@ -61,17 +60,16 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  // if (!this.isModified("password")) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
-  return next();
 });
 
 userSchema.methods.checkPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.generateAccessToken = function (params) {
+userSchema.methods.generateAccessToken = function () {
   const accessToken = jwt.sign(
     {
       _id: this._id,
@@ -85,7 +83,7 @@ userSchema.methods.generateAccessToken = function (params) {
   return accessToken;
 };
 
-userSchema.methods.generateRefreshToken = function (params) {
+userSchema.methods.generateRefreshToken = function () {
   const refreshToken = jwt.sign(
     {
       _id: this._id,
@@ -97,7 +95,7 @@ userSchema.methods.generateRefreshToken = function (params) {
   return refreshToken;
 };
 
-userSchema.methods.generateTemporaryToken = async function () {
+userSchema.methods.generateTemporaryToken =   function () {
   const unhashedToken = crypto.randomBytes(32).toString("hex");
 
   const hashedToken = crypto

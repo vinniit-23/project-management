@@ -1,8 +1,8 @@
-import mailgen from "mailgen";
+import Mailgen from "mailgen";
 import nodemailer from "nodemailer";
 
 const sendMail = async (options) => {
-  const mailGenerator = new mailgen({
+  const mailGenerator = new Mailgen({
     theme: "default",
     product: {
       name: "Task Manager",
@@ -46,7 +46,7 @@ const emailVerificationContent = (username, emailVerificationURL) => {
       name: username,
       intro:
         "Welcome to Task Manager,  We\'re very excited to have you on board.",
-      actions: {
+      action: {
         instructions: "Click following button for verification of your email",
         button: {
           color: "#26C471",
@@ -65,7 +65,7 @@ const passwordResetContent = (username, passwordResetURL) => {
       name: username,
       intro:
         "You have got this email because we have recieved a password reset request from your account",
-      actions: {
+      action: {
         instructions: "Click following button for reset your password",
         button: {
           color: "#EE3266",
